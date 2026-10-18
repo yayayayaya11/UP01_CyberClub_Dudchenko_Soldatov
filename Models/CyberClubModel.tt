@@ -1,0 +1,43 @@
+<#@ template language="C#" hostspecific="true" #>
+<#@ output extension=".cs" #>
+<#@ assembly name="System.Xml.Linq" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Xml.Linq" #>
+<#
+var document=XDocument.Load(Host.ResolvePath("CyberClubModel.edmx"));
+XNamespace e="http://schemas.microsoft.com/ado/2009/11/edm";
+var schema=document.Descendants(e+"Schema").Single();
+#>
+// Generated from CyberClubModel.edmx by CyberClubModel.tt.
+using System;
+using System.Collections.Generic;
+namespace CyberClub.Models {
+<# foreach(var entity in schema.Elements(e+"EntityType")) {
+var name=(string)entity.Attribute("Name");
+var navigation=entity.Elements(e+"NavigationProperty").Select(n=>{
+ var association=schema.Elements(e+"Association").Single(a=>(string)a.Attribute("Name")==((string)n.Attribute("Relationship")).Split('.').Last());
+ var end=association.Elements(e+"End").Single(a=>(string)a.Attribute("Role")== (string)n.Attribute("ToRole"));
+ return new {Name=(string)n.Attribute("Name"),Type=((string)end.Attribute("Type")).Split('.').Last(),Many=(string)end.Attribute("Multiplicity")=="*"};
+}).ToList();
+#>
+ public partial class <#= name #> {
+<# if(navigation.Any(n=>n.Many)){ #>
+  public <#= name #>() {
+<# foreach(var n in navigation.Where(n=>n.Many)){ #>
+   <#= n.Name #>=new HashSet<<#= n.Type #>>();
+<# } #>
+  }
+<# } foreach(var property in entity.Elements(e+"Property")){ #>
+  public <#= PropertyType(property) #> <#= (string)property.Attribute("Name") #> {get;set;}
+<# } foreach(var n in navigation){ #>
+  public virtual <#= n.Many?"ICollection<"+n.Type+">":n.Type #> <#= n.Name #> {get;set;}
+<# } #>
+ }
+<# } #>
+}
+<#+
+string PropertyType(XElement p){string t=(string)p.Attribute("Type");switch(t){case "Int32":t="int";break;case "String":t="string";break;case "Decimal":t="decimal";break;}return t+(t!="string"&&(string)p.Attribute("Nullable")=="true"?"?":"");}
+#>

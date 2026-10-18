@@ -1,0 +1,544 @@
+<?xml version='1.0' encoding='utf-8'?>
+<edmx:Edmx xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:c="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx" xmlns:m="http://schemas.microsoft.com/ado/2009/11/mapping/cs" xmlns:s="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Version="3.0">
+  <edmx:Runtime>
+    <edmx:StorageModels>
+      <s:Schema Namespace="CyberClubModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2012">
+        <s:EntityContainer Name="CyberClubModelStoreContainer">
+          <s:EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" Table="Users" />
+          <s:EntitySet Name="Clients" EntityType="Self.Clients" Schema="dbo" Table="Clients" />
+          <s:EntitySet Name="Clubs" EntityType="Self.Clubs" Schema="dbo" Table="Clubs" />
+          <s:EntitySet Name="Zones" EntityType="Self.Zones" Schema="dbo" Table="Zones" />
+          <s:EntitySet Name="Computers" EntityType="Self.Computers" Schema="dbo" Table="Computers" />
+          <s:EntitySet Name="Tariffs" EntityType="Self.Tariffs" Schema="dbo" Table="Tariffs" />
+          <s:EntitySet Name="Bookings" EntityType="Self.Bookings" Schema="dbo" Table="Bookings" />
+          <s:EntitySet Name="Payments" EntityType="Self.Payments" Schema="dbo" Table="Payments" />
+          <s:AssociationSet Name="FK_Zones_Clubs" Association="Self.FK_Zones_Clubs">
+            <s:End Role="Club" EntitySet="Clubs" />
+            <s:End Role="Zone" EntitySet="Zones" />
+          </s:AssociationSet>
+          <s:AssociationSet Name="FK_Computers_Zones" Association="Self.FK_Computers_Zones">
+            <s:End Role="Zone" EntitySet="Zones" />
+            <s:End Role="Computer" EntitySet="Computers" />
+          </s:AssociationSet>
+          <s:AssociationSet Name="FK_Bookings_Clients" Association="Self.FK_Bookings_Clients">
+            <s:End Role="Client" EntitySet="Clients" />
+            <s:End Role="Booking" EntitySet="Bookings" />
+          </s:AssociationSet>
+          <s:AssociationSet Name="FK_Bookings_Computers" Association="Self.FK_Bookings_Computers">
+            <s:End Role="Computer" EntitySet="Computers" />
+            <s:End Role="Booking" EntitySet="Bookings" />
+          </s:AssociationSet>
+          <s:AssociationSet Name="FK_Bookings_Tariffs" Association="Self.FK_Bookings_Tariffs">
+            <s:End Role="Tariff" EntitySet="Tariffs" />
+            <s:End Role="Booking" EntitySet="Bookings" />
+          </s:AssociationSet>
+          <s:AssociationSet Name="FK_Payments_Bookings" Association="Self.FK_Payments_Bookings">
+            <s:End Role="Booking" EntitySet="Bookings" />
+            <s:End Role="Payment" EntitySet="Payments" />
+          </s:AssociationSet>
+        </s:EntityContainer>
+        <s:EntityType Name="Users">
+          <s:Key>
+            <s:PropertyRef Name="Id" />
+          </s:Key>
+          <s:Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <s:Property Name="Login" Type="nvarchar" Nullable="false" MaxLength="40" />
+          <s:Property Name="PasswordHash" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <s:Property Name="FullName" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <s:Property Name="Role" Type="nvarchar" Nullable="false" MaxLength="20" />
+          <s:Property Name="Photo" Type="nvarchar" Nullable="true" MaxLength="260" />
+        </s:EntityType>
+        <s:EntityType Name="Clients">
+          <s:Key>
+            <s:PropertyRef Name="Id" />
+          </s:Key>
+          <s:Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <s:Property Name="FullName" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <s:Property Name="Phone" Type="nvarchar" Nullable="false" MaxLength="12" />
+          <s:Property Name="Email" Type="nvarchar" Nullable="true" MaxLength="100" />
+        </s:EntityType>
+        <s:EntityType Name="Clubs">
+          <s:Key>
+            <s:PropertyRef Name="Id" />
+          </s:Key>
+          <s:Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <s:Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="80" />
+          <s:Property Name="Address" Type="nvarchar" Nullable="false" MaxLength="180" />
+          <s:Property Name="Phone" Type="nvarchar" Nullable="false" MaxLength="12" />
+        </s:EntityType>
+        <s:EntityType Name="Zones">
+          <s:Key>
+            <s:PropertyRef Name="Id" />
+          </s:Key>
+          <s:Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <s:Property Name="ClubId" Type="int" Nullable="false" />
+          <s:Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="60" />
+        </s:EntityType>
+        <s:EntityType Name="Computers">
+          <s:Key>
+            <s:PropertyRef Name="Id" />
+          </s:Key>
+          <s:Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <s:Property Name="ZoneId" Type="int" Nullable="false" />
+          <s:Property Name="Number" Type="nvarchar" Nullable="false" MaxLength="20" />
+          <s:Property Name="Specifications" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <s:Property Name="Status" Type="nvarchar" Nullable="false" MaxLength="20" />
+        </s:EntityType>
+        <s:EntityType Name="Tariffs">
+          <s:Key>
+            <s:PropertyRef Name="Id" />
+          </s:Key>
+          <s:Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <s:Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="60" />
+          <s:Property Name="HourlyRate" Type="decimal" Nullable="false" Precision="10" Scale="2" />
+        </s:EntityType>
+        <s:EntityType Name="Bookings">
+          <s:Key>
+            <s:PropertyRef Name="Id" />
+          </s:Key>
+          <s:Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <s:Property Name="ClientId" Type="int" Nullable="false" />
+          <s:Property Name="ComputerId" Type="int" Nullable="false" />
+          <s:Property Name="TariffId" Type="int" Nullable="false" />
+          <s:Property Name="StartsAt" Type="datetime2" Nullable="false" Precision="0" />
+          <s:Property Name="EndsAt" Type="datetime2" Nullable="false" Precision="0" />
+          <s:Property Name="HourlyRate" Type="decimal" Nullable="false" Precision="10" Scale="2" />
+          <s:Property Name="Total" Type="decimal" Nullable="false" Precision="12" Scale="2" StoreGeneratedPattern="Computed" />
+          <s:Property Name="Status" Type="nvarchar" Nullable="false" MaxLength="20" />
+        </s:EntityType>
+        <s:EntityType Name="Payments">
+          <s:Key>
+            <s:PropertyRef Name="Id" />
+          </s:Key>
+          <s:Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <s:Property Name="BookingId" Type="int" Nullable="false" />
+          <s:Property Name="PaidAt" Type="datetime2" Nullable="false" Precision="0" />
+          <s:Property Name="Amount" Type="decimal" Nullable="false" Precision="12" Scale="2" />
+          <s:Property Name="Method" Type="nvarchar" Nullable="false" MaxLength="20" />
+        </s:EntityType>
+        <s:Association Name="FK_Zones_Clubs">
+          <s:End Role="Club" Type="Self.Clubs" Multiplicity="1">
+            <s:OnDelete Action="Cascade" />
+          </s:End>
+          <s:End Role="Zone" Type="Self.Zones" Multiplicity="*" />
+          <s:ReferentialConstraint>
+            <s:Principal Role="Club">
+              <s:PropertyRef Name="Id" />
+            </s:Principal>
+            <s:Dependent Role="Zone">
+              <s:PropertyRef Name="ClubId" />
+            </s:Dependent>
+          </s:ReferentialConstraint>
+        </s:Association>
+        <s:Association Name="FK_Computers_Zones">
+          <s:End Role="Zone" Type="Self.Zones" Multiplicity="1">
+            <s:OnDelete Action="Cascade" />
+          </s:End>
+          <s:End Role="Computer" Type="Self.Computers" Multiplicity="*" />
+          <s:ReferentialConstraint>
+            <s:Principal Role="Zone">
+              <s:PropertyRef Name="Id" />
+            </s:Principal>
+            <s:Dependent Role="Computer">
+              <s:PropertyRef Name="ZoneId" />
+            </s:Dependent>
+          </s:ReferentialConstraint>
+        </s:Association>
+        <s:Association Name="FK_Bookings_Clients">
+          <s:End Role="Client" Type="Self.Clients" Multiplicity="1">
+            <s:OnDelete Action="Cascade" />
+          </s:End>
+          <s:End Role="Booking" Type="Self.Bookings" Multiplicity="*" />
+          <s:ReferentialConstraint>
+            <s:Principal Role="Client">
+              <s:PropertyRef Name="Id" />
+            </s:Principal>
+            <s:Dependent Role="Booking">
+              <s:PropertyRef Name="ClientId" />
+            </s:Dependent>
+          </s:ReferentialConstraint>
+        </s:Association>
+        <s:Association Name="FK_Bookings_Computers">
+          <s:End Role="Computer" Type="Self.Computers" Multiplicity="1">
+            <s:OnDelete Action="Cascade" />
+          </s:End>
+          <s:End Role="Booking" Type="Self.Bookings" Multiplicity="*" />
+          <s:ReferentialConstraint>
+            <s:Principal Role="Computer">
+              <s:PropertyRef Name="Id" />
+            </s:Principal>
+            <s:Dependent Role="Booking">
+              <s:PropertyRef Name="ComputerId" />
+            </s:Dependent>
+          </s:ReferentialConstraint>
+        </s:Association>
+        <s:Association Name="FK_Bookings_Tariffs">
+          <s:End Role="Tariff" Type="Self.Tariffs" Multiplicity="1">
+            <s:OnDelete Action="Cascade" />
+          </s:End>
+          <s:End Role="Booking" Type="Self.Bookings" Multiplicity="*" />
+          <s:ReferentialConstraint>
+            <s:Principal Role="Tariff">
+              <s:PropertyRef Name="Id" />
+            </s:Principal>
+            <s:Dependent Role="Booking">
+              <s:PropertyRef Name="TariffId" />
+            </s:Dependent>
+          </s:ReferentialConstraint>
+        </s:Association>
+        <s:Association Name="FK_Payments_Bookings">
+          <s:End Role="Booking" Type="Self.Bookings" Multiplicity="1">
+            <s:OnDelete Action="Cascade" />
+          </s:End>
+          <s:End Role="Payment" Type="Self.Payments" Multiplicity="*" />
+          <s:ReferentialConstraint>
+            <s:Principal Role="Booking">
+              <s:PropertyRef Name="Id" />
+            </s:Principal>
+            <s:Dependent Role="Payment">
+              <s:PropertyRef Name="BookingId" />
+            </s:Dependent>
+          </s:ReferentialConstraint>
+        </s:Association>
+      </s:Schema>
+    </edmx:StorageModels>
+    <edmx:ConceptualModels>
+      <c:Schema Namespace="CyberClubModel" Alias="Self">
+        <c:EntityContainer Name="CyberClubEntities">
+          <c:EntitySet Name="Users" EntityType="CyberClubModel.User" />
+          <c:EntitySet Name="Clients" EntityType="CyberClubModel.Client" />
+          <c:EntitySet Name="Clubs" EntityType="CyberClubModel.Club" />
+          <c:EntitySet Name="Zones" EntityType="CyberClubModel.Zone" />
+          <c:EntitySet Name="Computers" EntityType="CyberClubModel.Computer" />
+          <c:EntitySet Name="Tariffs" EntityType="CyberClubModel.Tariff" />
+          <c:EntitySet Name="Bookings" EntityType="CyberClubModel.Booking" />
+          <c:EntitySet Name="Payments" EntityType="CyberClubModel.Payment" />
+          <c:AssociationSet Name="FK_Zones_Clubs" Association="CyberClubModel.FK_Zones_Clubs">
+            <c:End Role="Club" EntitySet="Clubs" />
+            <c:End Role="Zone" EntitySet="Zones" />
+          </c:AssociationSet>
+          <c:AssociationSet Name="FK_Computers_Zones" Association="CyberClubModel.FK_Computers_Zones">
+            <c:End Role="Zone" EntitySet="Zones" />
+            <c:End Role="Computer" EntitySet="Computers" />
+          </c:AssociationSet>
+          <c:AssociationSet Name="FK_Bookings_Clients" Association="CyberClubModel.FK_Bookings_Clients">
+            <c:End Role="Client" EntitySet="Clients" />
+            <c:End Role="Booking" EntitySet="Bookings" />
+          </c:AssociationSet>
+          <c:AssociationSet Name="FK_Bookings_Computers" Association="CyberClubModel.FK_Bookings_Computers">
+            <c:End Role="Computer" EntitySet="Computers" />
+            <c:End Role="Booking" EntitySet="Bookings" />
+          </c:AssociationSet>
+          <c:AssociationSet Name="FK_Bookings_Tariffs" Association="CyberClubModel.FK_Bookings_Tariffs">
+            <c:End Role="Tariff" EntitySet="Tariffs" />
+            <c:End Role="Booking" EntitySet="Bookings" />
+          </c:AssociationSet>
+          <c:AssociationSet Name="FK_Payments_Bookings" Association="CyberClubModel.FK_Payments_Bookings">
+            <c:End Role="Booking" EntitySet="Bookings" />
+            <c:End Role="Payment" EntitySet="Payments" />
+          </c:AssociationSet>
+        </c:EntityContainer>
+        <c:EntityType Name="User">
+          <c:Key>
+            <c:PropertyRef Name="Id" />
+          </c:Key>
+          <c:Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <c:Property Name="Login" Type="String" Nullable="false" MaxLength="40" Unicode="true" FixedLength="false" />
+          <c:Property Name="PasswordHash" Type="String" Nullable="false" MaxLength="200" Unicode="true" FixedLength="false" />
+          <c:Property Name="FullName" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <c:Property Name="Role" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+          <c:Property Name="Photo" Type="String" Nullable="true" MaxLength="260" Unicode="true" FixedLength="false" />
+        </c:EntityType>
+        <c:EntityType Name="Client">
+          <c:Key>
+            <c:PropertyRef Name="Id" />
+          </c:Key>
+          <c:Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <c:Property Name="FullName" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <c:Property Name="Phone" Type="String" Nullable="false" MaxLength="12" Unicode="true" FixedLength="false" />
+          <c:Property Name="Email" Type="String" Nullable="true" MaxLength="100" Unicode="true" FixedLength="false" />
+          <c:NavigationProperty Name="Bookings" Relationship="CyberClubModel.FK_Bookings_Clients" FromRole="Client" ToRole="Booking" />
+        </c:EntityType>
+        <c:EntityType Name="Club">
+          <c:Key>
+            <c:PropertyRef Name="Id" />
+          </c:Key>
+          <c:Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <c:Property Name="Name" Type="String" Nullable="false" MaxLength="80" Unicode="true" FixedLength="false" />
+          <c:Property Name="Address" Type="String" Nullable="false" MaxLength="180" Unicode="true" FixedLength="false" />
+          <c:Property Name="Phone" Type="String" Nullable="false" MaxLength="12" Unicode="true" FixedLength="false" />
+          <c:NavigationProperty Name="Zones" Relationship="CyberClubModel.FK_Zones_Clubs" FromRole="Club" ToRole="Zone" />
+        </c:EntityType>
+        <c:EntityType Name="Zone">
+          <c:Key>
+            <c:PropertyRef Name="Id" />
+          </c:Key>
+          <c:Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <c:Property Name="ClubId" Type="Int32" Nullable="false" />
+          <c:Property Name="Name" Type="String" Nullable="false" MaxLength="60" Unicode="true" FixedLength="false" />
+          <c:NavigationProperty Name="Club" Relationship="CyberClubModel.FK_Zones_Clubs" FromRole="Zone" ToRole="Club" />
+          <c:NavigationProperty Name="Computers" Relationship="CyberClubModel.FK_Computers_Zones" FromRole="Zone" ToRole="Computer" />
+        </c:EntityType>
+        <c:EntityType Name="Computer">
+          <c:Key>
+            <c:PropertyRef Name="Id" />
+          </c:Key>
+          <c:Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <c:Property Name="ZoneId" Type="Int32" Nullable="false" />
+          <c:Property Name="Number" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+          <c:Property Name="Specifications" Type="String" Nullable="false" MaxLength="200" Unicode="true" FixedLength="false" />
+          <c:Property Name="Status" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+          <c:NavigationProperty Name="Zone" Relationship="CyberClubModel.FK_Computers_Zones" FromRole="Computer" ToRole="Zone" />
+          <c:NavigationProperty Name="Bookings" Relationship="CyberClubModel.FK_Bookings_Computers" FromRole="Computer" ToRole="Booking" />
+        </c:EntityType>
+        <c:EntityType Name="Tariff">
+          <c:Key>
+            <c:PropertyRef Name="Id" />
+          </c:Key>
+          <c:Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <c:Property Name="Name" Type="String" Nullable="false" MaxLength="60" Unicode="true" FixedLength="false" />
+          <c:Property Name="HourlyRate" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
+          <c:NavigationProperty Name="Bookings" Relationship="CyberClubModel.FK_Bookings_Tariffs" FromRole="Tariff" ToRole="Booking" />
+        </c:EntityType>
+        <c:EntityType Name="Booking">
+          <c:Key>
+            <c:PropertyRef Name="Id" />
+          </c:Key>
+          <c:Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <c:Property Name="ClientId" Type="Int32" Nullable="false" />
+          <c:Property Name="ComputerId" Type="Int32" Nullable="false" />
+          <c:Property Name="TariffId" Type="Int32" Nullable="false" />
+          <c:Property Name="StartsAt" Type="DateTime" Nullable="false" Precision="0" />
+          <c:Property Name="EndsAt" Type="DateTime" Nullable="false" Precision="0" />
+          <c:Property Name="HourlyRate" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
+          <c:Property Name="Total" Type="Decimal" Nullable="false" Precision="12" Scale="2" annotation:StoreGeneratedPattern="Computed" />
+          <c:Property Name="Status" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+          <c:NavigationProperty Name="Client" Relationship="CyberClubModel.FK_Bookings_Clients" FromRole="Booking" ToRole="Client" />
+          <c:NavigationProperty Name="Computer" Relationship="CyberClubModel.FK_Bookings_Computers" FromRole="Booking" ToRole="Computer" />
+          <c:NavigationProperty Name="Tariff" Relationship="CyberClubModel.FK_Bookings_Tariffs" FromRole="Booking" ToRole="Tariff" />
+          <c:NavigationProperty Name="Payments" Relationship="CyberClubModel.FK_Payments_Bookings" FromRole="Booking" ToRole="Payment" />
+        </c:EntityType>
+        <c:EntityType Name="Payment">
+          <c:Key>
+            <c:PropertyRef Name="Id" />
+          </c:Key>
+          <c:Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <c:Property Name="BookingId" Type="Int32" Nullable="false" />
+          <c:Property Name="PaidAt" Type="DateTime" Nullable="false" Precision="0" />
+          <c:Property Name="Amount" Type="Decimal" Nullable="false" Precision="12" Scale="2" />
+          <c:Property Name="Method" Type="String" Nullable="false" MaxLength="20" Unicode="true" FixedLength="false" />
+          <c:NavigationProperty Name="Booking" Relationship="CyberClubModel.FK_Payments_Bookings" FromRole="Payment" ToRole="Booking" />
+        </c:EntityType>
+        <c:Association Name="FK_Zones_Clubs">
+          <c:End Role="Club" Type="CyberClubModel.Club" Multiplicity="1">
+            <c:OnDelete Action="Cascade" />
+          </c:End>
+          <c:End Role="Zone" Type="CyberClubModel.Zone" Multiplicity="*" />
+          <c:ReferentialConstraint>
+            <c:Principal Role="Club">
+              <c:PropertyRef Name="Id" />
+            </c:Principal>
+            <c:Dependent Role="Zone">
+              <c:PropertyRef Name="ClubId" />
+            </c:Dependent>
+          </c:ReferentialConstraint>
+        </c:Association>
+        <c:Association Name="FK_Computers_Zones">
+          <c:End Role="Zone" Type="CyberClubModel.Zone" Multiplicity="1">
+            <c:OnDelete Action="Cascade" />
+          </c:End>
+          <c:End Role="Computer" Type="CyberClubModel.Computer" Multiplicity="*" />
+          <c:ReferentialConstraint>
+            <c:Principal Role="Zone">
+              <c:PropertyRef Name="Id" />
+            </c:Principal>
+            <c:Dependent Role="Computer">
+              <c:PropertyRef Name="ZoneId" />
+            </c:Dependent>
+          </c:ReferentialConstraint>
+        </c:Association>
+        <c:Association Name="FK_Bookings_Clients">
+          <c:End Role="Client" Type="CyberClubModel.Client" Multiplicity="1">
+            <c:OnDelete Action="Cascade" />
+          </c:End>
+          <c:End Role="Booking" Type="CyberClubModel.Booking" Multiplicity="*" />
+          <c:ReferentialConstraint>
+            <c:Principal Role="Client">
+              <c:PropertyRef Name="Id" />
+            </c:Principal>
+            <c:Dependent Role="Booking">
+              <c:PropertyRef Name="ClientId" />
+            </c:Dependent>
+          </c:ReferentialConstraint>
+        </c:Association>
+        <c:Association Name="FK_Bookings_Computers">
+          <c:End Role="Computer" Type="CyberClubModel.Computer" Multiplicity="1">
+            <c:OnDelete Action="Cascade" />
+          </c:End>
+          <c:End Role="Booking" Type="CyberClubModel.Booking" Multiplicity="*" />
+          <c:ReferentialConstraint>
+            <c:Principal Role="Computer">
+              <c:PropertyRef Name="Id" />
+            </c:Principal>
+            <c:Dependent Role="Booking">
+              <c:PropertyRef Name="ComputerId" />
+            </c:Dependent>
+          </c:ReferentialConstraint>
+        </c:Association>
+        <c:Association Name="FK_Bookings_Tariffs">
+          <c:End Role="Tariff" Type="CyberClubModel.Tariff" Multiplicity="1">
+            <c:OnDelete Action="Cascade" />
+          </c:End>
+          <c:End Role="Booking" Type="CyberClubModel.Booking" Multiplicity="*" />
+          <c:ReferentialConstraint>
+            <c:Principal Role="Tariff">
+              <c:PropertyRef Name="Id" />
+            </c:Principal>
+            <c:Dependent Role="Booking">
+              <c:PropertyRef Name="TariffId" />
+            </c:Dependent>
+          </c:ReferentialConstraint>
+        </c:Association>
+        <c:Association Name="FK_Payments_Bookings">
+          <c:End Role="Booking" Type="CyberClubModel.Booking" Multiplicity="1">
+            <c:OnDelete Action="Cascade" />
+          </c:End>
+          <c:End Role="Payment" Type="CyberClubModel.Payment" Multiplicity="*" />
+          <c:ReferentialConstraint>
+            <c:Principal Role="Booking">
+              <c:PropertyRef Name="Id" />
+            </c:Principal>
+            <c:Dependent Role="Payment">
+              <c:PropertyRef Name="BookingId" />
+            </c:Dependent>
+          </c:ReferentialConstraint>
+        </c:Association>
+      </c:Schema>
+    </edmx:ConceptualModels>
+    <edmx:Mappings>
+      <m:Mapping Space="C-S">
+        <m:EntityContainerMapping StorageEntityContainer="CyberClubModelStoreContainer" CdmEntityContainer="CyberClubEntities">
+          <m:EntitySetMapping Name="Users">
+            <m:EntityTypeMapping TypeName="CyberClubModel.User">
+              <m:MappingFragment StoreEntitySet="Users">
+                <m:ScalarProperty Name="Id" ColumnName="Id" />
+                <m:ScalarProperty Name="Login" ColumnName="Login" />
+                <m:ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <m:ScalarProperty Name="FullName" ColumnName="FullName" />
+                <m:ScalarProperty Name="Role" ColumnName="Role" />
+                <m:ScalarProperty Name="Photo" ColumnName="Photo" />
+              </m:MappingFragment>
+            </m:EntityTypeMapping>
+          </m:EntitySetMapping>
+          <m:EntitySetMapping Name="Clients">
+            <m:EntityTypeMapping TypeName="CyberClubModel.Client">
+              <m:MappingFragment StoreEntitySet="Clients">
+                <m:ScalarProperty Name="Id" ColumnName="Id" />
+                <m:ScalarProperty Name="FullName" ColumnName="FullName" />
+                <m:ScalarProperty Name="Phone" ColumnName="Phone" />
+                <m:ScalarProperty Name="Email" ColumnName="Email" />
+              </m:MappingFragment>
+            </m:EntityTypeMapping>
+          </m:EntitySetMapping>
+          <m:EntitySetMapping Name="Clubs">
+            <m:EntityTypeMapping TypeName="CyberClubModel.Club">
+              <m:MappingFragment StoreEntitySet="Clubs">
+                <m:ScalarProperty Name="Id" ColumnName="Id" />
+                <m:ScalarProperty Name="Name" ColumnName="Name" />
+                <m:ScalarProperty Name="Address" ColumnName="Address" />
+                <m:ScalarProperty Name="Phone" ColumnName="Phone" />
+              </m:MappingFragment>
+            </m:EntityTypeMapping>
+          </m:EntitySetMapping>
+          <m:EntitySetMapping Name="Zones">
+            <m:EntityTypeMapping TypeName="CyberClubModel.Zone">
+              <m:MappingFragment StoreEntitySet="Zones">
+                <m:ScalarProperty Name="Id" ColumnName="Id" />
+                <m:ScalarProperty Name="ClubId" ColumnName="ClubId" />
+                <m:ScalarProperty Name="Name" ColumnName="Name" />
+              </m:MappingFragment>
+            </m:EntityTypeMapping>
+          </m:EntitySetMapping>
+          <m:EntitySetMapping Name="Computers">
+            <m:EntityTypeMapping TypeName="CyberClubModel.Computer">
+              <m:MappingFragment StoreEntitySet="Computers">
+                <m:ScalarProperty Name="Id" ColumnName="Id" />
+                <m:ScalarProperty Name="ZoneId" ColumnName="ZoneId" />
+                <m:ScalarProperty Name="Number" ColumnName="Number" />
+                <m:ScalarProperty Name="Specifications" ColumnName="Specifications" />
+                <m:ScalarProperty Name="Status" ColumnName="Status" />
+              </m:MappingFragment>
+            </m:EntityTypeMapping>
+          </m:EntitySetMapping>
+          <m:EntitySetMapping Name="Tariffs">
+            <m:EntityTypeMapping TypeName="CyberClubModel.Tariff">
+              <m:MappingFragment StoreEntitySet="Tariffs">
+                <m:ScalarProperty Name="Id" ColumnName="Id" />
+                <m:ScalarProperty Name="Name" ColumnName="Name" />
+                <m:ScalarProperty Name="HourlyRate" ColumnName="HourlyRate" />
+              </m:MappingFragment>
+            </m:EntityTypeMapping>
+          </m:EntitySetMapping>
+          <m:EntitySetMapping Name="Bookings">
+            <m:EntityTypeMapping TypeName="CyberClubModel.Booking">
+              <m:MappingFragment StoreEntitySet="Bookings">
+                <m:ScalarProperty Name="Id" ColumnName="Id" />
+                <m:ScalarProperty Name="ClientId" ColumnName="ClientId" />
+                <m:ScalarProperty Name="ComputerId" ColumnName="ComputerId" />
+                <m:ScalarProperty Name="TariffId" ColumnName="TariffId" />
+                <m:ScalarProperty Name="StartsAt" ColumnName="StartsAt" />
+                <m:ScalarProperty Name="EndsAt" ColumnName="EndsAt" />
+                <m:ScalarProperty Name="HourlyRate" ColumnName="HourlyRate" />
+                <m:ScalarProperty Name="Total" ColumnName="Total" />
+                <m:ScalarProperty Name="Status" ColumnName="Status" />
+              </m:MappingFragment>
+            </m:EntityTypeMapping>
+          </m:EntitySetMapping>
+          <m:EntitySetMapping Name="Payments">
+            <m:EntityTypeMapping TypeName="CyberClubModel.Payment">
+              <m:MappingFragment StoreEntitySet="Payments">
+                <m:ScalarProperty Name="Id" ColumnName="Id" />
+                <m:ScalarProperty Name="BookingId" ColumnName="BookingId" />
+                <m:ScalarProperty Name="PaidAt" ColumnName="PaidAt" />
+                <m:ScalarProperty Name="Amount" ColumnName="Amount" />
+                <m:ScalarProperty Name="Method" ColumnName="Method" />
+              </m:MappingFragment>
+            </m:EntityTypeMapping>
+          </m:EntitySetMapping>
+        </m:EntityContainerMapping>
+      </m:Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <edmx:Designer>
+    <edmx:Connection>
+      <edmx:DesignerInfoPropertySet>
+        <edmx:DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </edmx:DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <edmx:DesignerInfoPropertySet>
+        <edmx:DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <edmx:DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <edmx:DesignerProperty Name="EnablePluralization" Value="true" />
+      </edmx:DesignerInfoPropertySet>
+    </edmx:Options>
+    <edmx:Diagrams>
+      <edmx:Diagram Name="CyberClubModel" DiagramId="a077cd0bbd414472aa41a093d678a731">
+        <edmx:EntityTypeShape EntityType="CyberClubModel.User" Width="2.7" PointX="0.0" PointY="0.0" IsExpanded="true" />
+        <edmx:EntityTypeShape EntityType="CyberClubModel.Client" Width="2.7" PointX="3.8" PointY="0.0" IsExpanded="true" />
+        <edmx:EntityTypeShape EntityType="CyberClubModel.Club" Width="2.7" PointX="7.6" PointY="0.0" IsExpanded="true" />
+        <edmx:EntityTypeShape EntityType="CyberClubModel.Zone" Width="2.7" PointX="0.0" PointY="4.5" IsExpanded="true" />
+        <edmx:EntityTypeShape EntityType="CyberClubModel.Computer" Width="2.7" PointX="3.8" PointY="4.5" IsExpanded="true" />
+        <edmx:EntityTypeShape EntityType="CyberClubModel.Tariff" Width="2.7" PointX="7.6" PointY="4.5" IsExpanded="true" />
+        <edmx:EntityTypeShape EntityType="CyberClubModel.Booking" Width="2.7" PointX="0.0" PointY="9.0" IsExpanded="true" />
+        <edmx:EntityTypeShape EntityType="CyberClubModel.Payment" Width="2.7" PointX="3.8" PointY="9.0" IsExpanded="true" />
+        <edmx:AssociationConnector Association="CyberClubModel.FK_Zones_Clubs" ManuallyRouted="false" />
+        <edmx:AssociationConnector Association="CyberClubModel.FK_Computers_Zones" ManuallyRouted="false" />
+        <edmx:AssociationConnector Association="CyberClubModel.FK_Bookings_Clients" ManuallyRouted="false" />
+        <edmx:AssociationConnector Association="CyberClubModel.FK_Bookings_Computers" ManuallyRouted="false" />
+        <edmx:AssociationConnector Association="CyberClubModel.FK_Bookings_Tariffs" ManuallyRouted="false" />
+        <edmx:AssociationConnector Association="CyberClubModel.FK_Payments_Bookings" ManuallyRouted="false" />
+      </edmx:Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
