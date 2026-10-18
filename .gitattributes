@@ -1,0 +1,10 @@
+* text=auto
+*.cs text eol=crlf
+*.xaml text eol=crlf
+*.sql text eol=crlf
+*.png binary
+*.ico binary
+*.ttf binary
+*.docx binary
+*.xlsx binary
+*.pdf binary
