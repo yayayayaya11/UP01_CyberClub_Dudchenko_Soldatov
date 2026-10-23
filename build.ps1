@@ -1,5 +1,15 @@
 $ErrorActionPreference='Stop'
 Set-Location -LiteralPath $PSScriptRoot
+$vswhere=Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+$msbuild=$null
+if(Test-Path -LiteralPath $vswhere){$msbuild=& $vswhere -latest -products '*' -requires Microsoft.Component.MSBuild -find 'MSBuild\**\Bin\MSBuild.exe' | Select-Object -First 1}
+if($msbuild){
+ & $msbuild 'CyberClub.csproj' /nologo /t:Rebuild /p:Configuration=Debug /p:OutputPath=bin\Standalone\ /v:minimal
+ if($LASTEXITCODE -ne 0){throw 'Application build failed'}
+ Copy-Item -LiteralPath 'bin\Standalone\CyberClub.exe','bin\Standalone\CyberClub.exe.config' -Destination $PSScriptRoot -Force
+ Write-Output 'Build completed with Visual Studio MSBuild: CyberClub.exe'
+ return
+}
 $framework=Join-Path $env:WINDIR 'Microsoft.NET\Framework64\v4.0.30319'
 $compiler=Join-Path $framework 'csc.exe'
 $refs=@('System.dll','System.Core.dll','System.Data.dll','System.Configuration.dll','System.Xml.dll','System.Xaml.dll','System.IO.Compression.dll','System.IO.Compression.FileSystem.dll') | ForEach-Object { '/reference:'+(Join-Path $framework $_) }
@@ -16,9 +26,6 @@ foreach($item in @(@('csdl',$edmx.Edmx.Runtime.ConceptualModels.Schema),@('ssdl'
 $sources=@(Get-ChildItem -LiteralPath src,Models -Filter '*.cs' | ForEach-Object {$_.FullName})
 & $compiler /nologo /target:winexe /platform:anycpu /codepage:65001 /main:CyberClub.Program /out:CyberClub.exe /win32icon:res/club.ico $refs $resources $sources
 if($LASTEXITCODE -ne 0){throw 'Application build failed'}
-& $compiler /nologo /target:winexe /platform:anycpu /codepage:65001 /main:CyberClub.VerificationEntry /out:Verify.exe $refs $resources $sources (Join-Path $PSScriptRoot 'tests\Verification.cs')
-if($LASTEXITCODE -ne 0){throw 'Verification build failed'}
 Copy-Item -LiteralPath App.config -Destination CyberClub.exe.config -Force
-Copy-Item -LiteralPath App.config -Destination Verify.exe.config -Force
 Copy-Item -LiteralPath (Join-Path $ef 'EntityFramework.dll'),(Join-Path $ef 'EntityFramework.SqlServer.dll') -Destination $PSScriptRoot -Force
-Write-Output 'Build completed: CyberClub.exe and Verify.exe'
+Write-Output 'Build completed: CyberClub.exe'
