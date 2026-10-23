@@ -33,16 +33,18 @@
 ## Использование контекста
 
 ```csharp
-using (var context = DataContext.GetContext())
+public static class Core
 {
-    var clubs = context.Clubs.AsNoTracking().ToList();
-    var club = context.Clubs.Find(id);
-    club.Address = "Новый адрес";
-    context.SaveChanges();
+    public static CyberClubEntities Context = new CyberClubEntities();
 }
+
+var clubs = Core.Context.Clubs.AsNoTracking().ToList();
+var club = Core.Context.Clubs.Find(id);
+club.Address = "Новый адрес";
+Core.SaveChanges();
 ```
 
-Авторизация выполняет LINQ-запрос к `context.Users`. Регистрация вызывает `Users.Add`, смена пароля меняет свойство сущности. Добавление, редактирование и удаление всех восьми таблиц сохраняются через `SaveChanges()`.
+`src/Core.cs` содержит общий контекст `Core.Context`. Авторизация выполняет LINQ-запрос к его Users. Регистрация вызывает Users.Add, смена пароля меняет свойство сущности. Core.SaveChanges вызывает Context.SaveChanges и очищает отслеживание после успешной или отклонённой операции. Это предотвращает повторную отправку ошибочных записей. Класс DataContext удалён.
 
 Для общих экранов DataGrid и аналитических объединений оставлены параметризованные табличные запросы. Они получают соединение из CyberClubEntities, а не создают отдельное подключение приложения. Прямой SqlConnection в установке и проверках нужен только для создания и удаления отдельной тестовой базы в master.
 
@@ -53,6 +55,6 @@ using (var context = DataContext.GetContext())
 3. Сохраните EDMX.
 4. Для `CyberClubModel.tt` выполните «Запустить пользовательский инструмент» (Run Custom Tool). Он обновит CyberClubModel.cs.
 5. Если добавлялись новые таблицы, добавьте соответствующие DbSet в контекст и описание раздела в Catalog. Для существующих восьми таблиц всё уже сделано.
-6. Пересоберите решение и запустите Verify.exe для проверки функций.
+6. Пересоберите решение, запустите CyberClub.exe и проверьте вход, просмотр разделов и сохранение записей.
 
-Автоматическое создание и миграции Code First отключены. Каскады, ограничения и триггеры продолжают выполняться SQL Server. Контекст создаётся на операцию и освобождается через using.
+Автоматическое создание и миграции Code First отключены. Каскады, ограничения и триггеры продолжают выполняться SQL Server. Общий контекст создаётся в Core и освобождается при выходе из приложения. Его нельзя оборачивать в using при выполнении отдельных операций.
