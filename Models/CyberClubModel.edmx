@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 <edmx:Edmx xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:c="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx" xmlns:m="http://schemas.microsoft.com/ado/2009/11/mapping/cs" xmlns:s="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Version="3.0">
   <edmx:Runtime>
     <edmx:StorageModels>
@@ -523,7 +523,7 @@
       </edmx:DesignerInfoPropertySet>
     </edmx:Options>
     <edmx:Diagrams>
-      <edmx:Diagram Name="CyberClubModel" DiagramId="a077cd0bbd414472aa41a093d678a731">
+      <edmx:Diagram Name="CyberClubModel" DiagramId="a077cd0bbd414472aa41a093d678a731" ZoomLevel="64">
         <edmx:EntityTypeShape EntityType="CyberClubModel.User" Width="2.7" PointX="0.0" PointY="0.0" IsExpanded="true" />
         <edmx:EntityTypeShape EntityType="CyberClubModel.Client" Width="2.7" PointX="3.8" PointY="0.0" IsExpanded="true" />
         <edmx:EntityTypeShape EntityType="CyberClubModel.Club" Width="2.7" PointX="7.6" PointY="0.0" IsExpanded="true" />
