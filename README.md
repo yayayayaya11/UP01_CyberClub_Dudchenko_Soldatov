@@ -16,7 +16,7 @@
 
 База **DB_Dudchenko_Soldatov_CyberClub** уже создана на **(localdb)\MSSQLLocalDB**. Подключение выполнено через **ADO.NET Entity Data Model (.edmx), Entity Framework 6.4.4, Database First**. Используется проверка подлинности Windows. Пароли приведены только для учебных аккаунтов.
 
-Модель: `Models/CyberClubModel.edmx`. Контекст: `CyberClubEntities`. Строка подключения `CyberClubEntities` находится в `App.config`. Все восемь таблиц представлены классами и DbSet; авторизация использует LINQ, регистрация и CRUD — сущности и `SaveChanges()`. Подробности: `docs/Подключение_EDMX.md`.
+Модель: `Models/CyberClubModel.edmx`. Контекст: `CyberClubEntities`. Строка подключения `CyberClubEntities` находится в `App.config`. Все восемь таблиц представлены классами и DbSet; авторизация использует LINQ, регистрация и CRUD — сущности и `SaveChanges()`. 
 
 Общий контекст находится в `src/Core.cs`: `public static CyberClubEntities Context = new CyberClubEntities();`. Чтение и изменение выполняются через `Core.Context`; класс DataContext удалён. `Core.SaveChanges()` вызывает сохранение контекста и очищает отслеживаемые сущности, включая записи после отклонённой операции. Общий контекст закрывается при выходе из приложения.
 
